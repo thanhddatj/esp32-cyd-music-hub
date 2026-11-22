@@ -34,7 +34,7 @@ jobs:
 
       - name: Gom file bin
         run: |
-                    pip install "esptool>=4.7,<5"
+          pip install "esptool>=4.7,<5"
           mkdir out
           B=.pio/build/cyd
           BOOT=$(find ~/.platformio/packages -name boot_app0.bin | head -n 1)
