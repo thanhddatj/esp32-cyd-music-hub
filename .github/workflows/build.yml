@@ -34,19 +34,20 @@ jobs:
 
       - name: Gom file bin
         run: |
+                    pip install "esptool>=4.7,<5"
           mkdir out
           B=.pio/build/cyd
-          P=~/.platformio/packages
-          # 1) Chi phan firmware (dung cho OTA hoac nap tai 0x10000)
+          BOOT=$(find ~/.platformio/packages -name boot_app0.bin | head -n 1)
+          echo "boot_app0: $BOOT"
           cp $B/firmware.bin out/music-hub-app.bin
-          # 2) Ban day du (nap tai dia chi 0x0 cho board moi hoac xoa sach)
-          python $P/tool-esptoolpy/esptool.py --chip esp32 merge_bin \
+          python -m esptool --chip esp32 merge_bin \
             -o out/music-hub-full.bin \
             --flash_mode dio --flash_freq 40m --flash_size 4MB \
             0x1000 $B/bootloader.bin \
             0x8000 $B/partitions.bin \
-            0xe000 $P/framework-arduinoespressif32/tools/partitions/boot_app0.bin \
+            0xe000 "$BOOT" \
             0x10000 $B/firmware.bin
+
 
       - uses: actions/upload-artifact@v4
         with:
