@@ -402,7 +402,7 @@ void setup() {
   Serial.printf("boot: nvs err=%d\n", (int)nvsErr);
 
   // Khoi tao BLE truoc khi man hinh chiem bo nho
-  Serial.println("boot: init ble");
+  //Serial.println("boot: init ble");
   NimBLEDevice::init("cyd-music");
   NimBLEDevice::setMTU(185);
   Serial.printf("boot: ble ok, heap free=%u max=%u\n", ESP.getFreeHeap(), ESP.getMaxAllocHeap());
