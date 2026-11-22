@@ -167,6 +167,14 @@ void setup() {
   Serial.begin(115200);
   pinMode(BACKLIGHT_PIN, OUTPUT);
   digitalWrite(BACKLIGHT_PIN, HIGH);
+  
+  BLEDevice::init("ESP32_Controller");
+  BLEScan* pBLEScan = BLEDevice::getScan();
+  pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks(), true);
+  pBLEScan->setInterval(1349);
+  pBLEScan->setWindow(449);
+  pBLEScan->setActiveScan(true);
+  pBLEScan->start(5, false);
 
   tft.init();
   tft.setRotation(1);
@@ -185,13 +193,7 @@ void setup() {
   drawButton(btnNext, btnNext.color);
   drawUI();
 
-  BLEDevice::init("ESP32_Controller");
-  BLEScan* pBLEScan = BLEDevice::getScan();
-  pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks(), true);
-  pBLEScan->setInterval(1349);
-  pBLEScan->setWindow(449);
-  pBLEScan->setActiveScan(true);
-  pBLEScan->start(5, false);
+  
 }
 
 void loop() {
