@@ -70,7 +70,13 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: out/*.bin
-
+      - name: Cap nhat Release "latest" (khi push len main)
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Firmware moi nhat
+          files: out/*.bin
   deploy:
     needs: build
     if: github.ref == 'refs/heads/main'
