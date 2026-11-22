@@ -419,7 +419,11 @@ void setup() {
   titleSpr.createSprite(460, 30);
   drawPage();
   Serial.println("boot: start ble task");
-  xTaskCreatePinnedToCore(bleTask, "ble", 8192, nullptr, 1, nullptr, 0);
+// Tạm tắt BLE để kiểm tra nguyên nhân bootloop
+// xTaskCreatePinnedToCore(bleTask, "ble", 8192, nullptr, 1, nullptr, 0);
+
+  Serial.println("BOOT TEST: BLE DISABLED");
+ // xTaskCreatePinnedToCore(bleTask, "ble", 8192, nullptr, 1, nullptr, 0);
 }
 
 void loop() {
