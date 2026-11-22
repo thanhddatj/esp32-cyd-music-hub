@@ -105,19 +105,18 @@ class MyClientCallback : public BLEClientCallbacks {
 
 class MyAdvertisedDeviceCallbacks : public BLEAdvertisedDeviceCallbacks {
   void onResult(BLEAdvertisedDevice advertisedDevice) override {
-    String devName = advertisedDevice.getName().c_str();
-    bool nameMatch = devName.startsWith(TARGET_NAME_PREFIX);
-    bool serviceMatch = advertisedDevice.haveServiceUUID() &&
-                        advertisedDevice.isAdvertisingService(SERVICE_UUID);
+    String devName = advertisedDevice.haveName()
+                         ? String(advertisedDevice.getName().c_str())
+                         : String("(khong co ten)");
+    String devAddr = String(advertisedDevice.getAddress().toString().c_str());
+    int rssi = advertisedDevice.getRSSI();
 
-    if (nameMatch || serviceMatch) {
-      Serial.printf("[BLE] Tim thay loa: %s (%s)\n",
-                    devName.c_str(),
-                    advertisedDevice.getAddress().toString().c_str());
-      BLEDevice::getScan()->stop();
-      targetDevice = new BLEAdvertisedDevice(advertisedDevice);
-      doConnect = true;
+    Serial.printf("[BLE] Ten: %s | MAC: %s | RSSI: %d dBm",
+                  devName.c_str(), devAddr.c_str(), rssi);
+    if (advertisedDevice.haveServiceUUID()) {
+      Serial.printf(" | UUID: %s", advertisedDevice.getServiceUUID().toString().c_str());
     }
+    Serial.println();
   }
 };
 
@@ -188,7 +187,7 @@ void setup() {
 
   BLEDevice::init("ESP32_Controller");
   BLEScan* pBLEScan = BLEDevice::getScan();
-  pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
+  pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks(), true);
   pBLEScan->setInterval(1349);
   pBLEScan->setWindow(449);
   pBLEScan->setActiveScan(true);
@@ -207,13 +206,15 @@ void loop() {
     uiDirty = true;
   }
 
-  if (!isConnected && !doConnect) {
+    if (!isConnected && !doConnect) {
     static unsigned long lastScanMs = 0;
     if (millis() - lastScanMs > 6000) {
       lastScanMs = millis();
+      BLEDevice::getScan()->clearResults();
       BLEDevice::getScan()->start(5, false);
     }
   }
+
 
   if (uiDirty) {
     uiDirty = false;
