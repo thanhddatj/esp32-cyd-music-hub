@@ -8,6 +8,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build:
@@ -48,14 +50,34 @@ jobs:
             0xe000 "$BOOT" \
             0x10000 $B/firmware.bin
 
-
       - uses: actions/upload-artifact@v4
         with:
           name: firmware
           path: out/*.bin
+
+      - name: Tao trang cai dat qua USB
+        run: |
+          mkdir site
+          cp out/music-hub-full.bin site/
+          cp web/index.html web/manifest.json site/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
 
       - name: Tao Release (khi push tag v*)
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: out/*.bin
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
