@@ -1,0 +1,43 @@
+name: Decode backtrace
+
+on:
+  workflow_dispatch:
+    inputs:
+      addresses:
+        description: 'Cac dia chi trong Backtrace, cach nhau bang dau cach (vd: 0x400d87f6 0x400d34ee)'
+        required: true
+
+jobs:
+  decode:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Dung cung khoa cache voi build.yml de lay dung phien ban thu vien da build truoc do
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.platformio
+            ~/.cache/pip
+          key: pio-${{ hashFiles('platformio.ini') }}
+
+      - name: Cai PlatformIO
+        run: pip install platformio
+
+      - name: Build
+        run: pio run
+
+      - name: Giai ma backtrace
+        env:
+          ADDRS: ${{ github.event.inputs.addresses }}
+        run: |
+          ELF=.pio/build/cyd/firmware.elf
+          echo "ELF SHA256 (9 ky tu dau): $(sha256sum $ELF | cut -c1-9)"
+          echo "So sanh voi dong 'ELF file SHA256' trong log tren man hinh."
+          A2L=$(find ~/.platformio/packages -name xtensa-esp32-elf-addr2line | head -n 1)
+          echo "Ket qua:"
+          $A2L -pfiaC -e $ELF $ADDRS
