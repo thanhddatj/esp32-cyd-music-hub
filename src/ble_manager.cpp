@@ -33,7 +33,7 @@ static EqBand g_eq[5] = {
 class ScanCB : public BLEAdvertisedDeviceCallbacks {
   void onResult(BLEAdvertisedDevice dev) override {
     BleDevice d;
-    d.name    = dev.haveName()  ? dev.getName().c_str() : "(no name)";
+    d.name    = dev.haveName()  ? dev.getName().c_str() : "Unknown";
     d.address = dev.getAddress().toString().c_str();
     d.rssi    = dev.getRSSI();
     // Avoid duplicates
