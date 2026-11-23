@@ -216,7 +216,7 @@ void ui_ota_enter(TFT_eSPI& tft) {
 }
 
 AppState ui_ota_update(TFT_eSPI& tft) {
-  ota_update();         // xử lý reboot nếu cần
+  ota_tick();         // xử lý reboot nếu cần
   tickHeartbeat(tft);   // nhấp nháy dot
   refreshState(tft);    // cập nhật progress
 

@@ -2,44 +2,35 @@
 #include <Arduino.h>
 
 /*
- * ota_manager.h
- * ─────────────
- * OTA qua WiFi:
- *   - Bật WiFi Access Point "MusicHub-OTA" (hoặc join mạng nhà)
- *   - Web server tại 192.168.4.1 (AP mode)
- *   - Upload file .bin từ trình duyệt → tự flash → reboot
- *
- * Dùng thư viện:
- *   ESPAsyncWebServer  (me-no-dev/ESPAsyncWebServer)
- *   AsyncTCP           (me-no-dev/AsyncTCP)
- *   Update             (built-in ESP-IDF)
+ * ota_manager.h  –  v2 (synchronous WebServer, BLE-safe)
+ * ────────────────────────────────────────────────────────
+ * Dùng WebServer built-in (synchronous, BLE-safe).
+ * handleClient() được gọi từ ui_ota_update() mỗi tick.
+ * Không có callback từ thread khác → không xung đột BLE/TCP.
  */
 
 enum class OtaState : uint8_t {
-  IDLE,          // chưa khởi động
-  STARTING,      // đang bật WiFi
-  READY,         // server đang chạy, chờ upload
-  UPLOADING,     // đang nhận file
-  FLASHING,      // đang ghi flash
-  SUCCESS,       // xong, sắp reboot
-  ERROR,         // lỗi
+  IDLE,        // chưa khởi động
+  READY,       // WiFi AP + server đang chạy, chờ upload
+  UPLOADING,   // đang nhận + ghi flash (trong handleClient)
+  SUCCESS,     // flash xong, chờ reboot
+  ERROR,       // lỗi flash
 };
 
-// Khởi động WiFi AP + web server OTA
-// ssid/pass: tên và mật khẩu AP muốn tạo
+// Khởi động WiFi AP + web server
+// Gọi một lần khi vào màn hình OTA
 void ota_start(const char* ssid = "MusicHub-OTA",
                const char* pass = "12345678");
 
 // Dừng server + tắt WiFi
+// Gọi khi thoát màn hình OTA
 void ota_stop();
 
+// Gọi từ loop mỗi tick – xử lý HTTP request + reboot nếu cần
+// Trả về true nếu đang bận xử lý upload (để UI biết không vẽ)
+bool ota_tick();
+
 OtaState ota_get_state();
-
-// Tiến độ upload (0-100), chỉ hợp lệ khi state == UPLOADING
-uint8_t  ota_get_progress();
-
-// IP của AP (để hiện lên màn hình)
+uint8_t  ota_get_progress();   // 0-100
 String   ota_get_ip();
-
-// Gọi từ loop() – xử lý reboot sau khi flash xong
-void     ota_update();
+const char* ota_get_error();

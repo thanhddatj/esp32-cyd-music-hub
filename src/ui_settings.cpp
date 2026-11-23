@@ -283,7 +283,6 @@ AppState ui_settings_update(TFT_eSPI& tft) {
       int btnY = CONTENT_Y2 + 132;
       if (tx >= PANEL_X+10 && tx <= PANEL_X+160 &&
           ty >= btnY && ty <= btnY+36) {
-        ble_disconnect();
         return AppState::OTA;
       }
     }

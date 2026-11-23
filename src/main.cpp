@@ -9,11 +9,13 @@
  *   ble_manager.h/cpp  – BLE central logic (KBox AB-service)
  *   touch.h/cpp        – XPT2046 touch helper
  *   theme.h            – shared colours, fonts, layout consts
+ *
  */
 
 #include <Arduino.h>
 #include <SPI.h>
 #include <TFT_eSPI.h>
+
 #include "theme.h"
 #include "touch.h"
 #include "ble_manager.h"
