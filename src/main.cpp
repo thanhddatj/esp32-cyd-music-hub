@@ -27,7 +27,7 @@
 #include "ui_settings.h"
 
 // ── Hardware ────────────────────────────────────────────────
-static constexpr int BACKLIGHT_PIN = 21;
+static constexpr int BACKLIGHT_PIN = 27;
 
 // ── Shared display ──────────────────────────────────────────
 TFT_eSPI tft;
