@@ -49,8 +49,8 @@ static void drawTopBar(TFT_eSPI& tft) {
 }
 
 // ── Left menu ────────────────────────────────────────────────
-static const char* menuLabels[] = { "Equaliser", "Device", "About" };
-static constexpr int MENU_COUNT = 3;
+static const char* menuLabels[] = { "Equaliser", "Device", "Firmware", "About" };
+static constexpr int MENU_COUNT = 4;
 
 static void drawMenu(TFT_eSPI& tft) {
   for (int i = 0; i < MENU_COUNT; i++) {
@@ -163,6 +163,32 @@ static void drawDevicePanel(TFT_eSPI& tft) {
   tft.drawString("Disconnect", PANEL_X+10+55, y+16, FONT_SMALL);
 }
 
+// ── Firmware panel ────────────────────────────────────────────
+static void drawFirmwarePanel(TFT_eSPI& tft) {
+  tft.fillRect(PANEL_X, CONTENT_Y2, PANEL_W, CONTENT_H2, CLR_BG);
+  int y = CONTENT_Y2 + 12;
+
+  tft.setTextDatum(TL_DATUM);
+  tft.setTextColor(CLR_TEXT_PRI, CLR_BG);
+  tft.drawString("Cap nhat Firmware", PANEL_X+10, y, FONT_SMALL); y += 20;
+
+  tft.setTextColor(CLR_TEXT_DIM, CLR_BG);
+  tft.drawString("Phien ban hien tai: v1.0.0", PANEL_X+10, y, 1); y += 32;
+
+  tft.setTextColor(CLR_TEXT_SEC, CLR_BG);
+  tft.drawString("OTA qua WiFi:", PANEL_X+10, y, 1); y += 16;
+  tft.setTextColor(CLR_TEXT_DIM, CLR_BG);
+  tft.drawString("1. Bam nut ben duoi", PANEL_X+10, y, 1); y += 14;
+  tft.drawString("2. Ket noi WiFi MusicHub-OTA", PANEL_X+10, y, 1); y += 14;
+  tft.drawString("3. Mo trinh duyet, upload .bin", PANEL_X+10, y, 1); y += 24;
+
+  // OTA button
+  tft.fillRoundRect(PANEL_X+10, y, 150, 36, 8, CLR_ACCENT);
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(CLR_BG, CLR_ACCENT);
+  tft.drawString("Bat dau OTA", PANEL_X+10+75, y+18, FONT_SMALL);
+}
+
 // ── About panel ───────────────────────────────────────────────
 static void drawAboutPanel(TFT_eSPI& tft) {
   tft.fillRect(PANEL_X, CONTENT_Y2, PANEL_W, CONTENT_H2, CLR_BG);
@@ -179,9 +205,10 @@ static void drawAboutPanel(TFT_eSPI& tft) {
 
 static void drawPanel(TFT_eSPI& tft) {
   switch (g_activeMenu) {
-    case 0: drawEqPanel(tft);     break;
-    case 1: drawDevicePanel(tft); break;
-    case 2: drawAboutPanel(tft);  break;
+    case 0: drawEqPanel(tft);       break;
+    case 1: drawDevicePanel(tft);   break;
+    case 2: drawFirmwarePanel(tft); break;
+    case 3: drawAboutPanel(tft);    break;
   }
 }
 
@@ -241,6 +268,7 @@ AppState ui_settings_update(TFT_eSPI& tft) {
     if (g_activeMenu == 0) {
       // EQ sliders
       handleEqTouch(tft, tx, ty);
+
     } else if (g_activeMenu == 1) {
       // Disconnect button area
       int y = CONTENT_Y2 + 12 + 22 + 22 + 16 + 28;
@@ -248,6 +276,14 @@ AppState ui_settings_update(TFT_eSPI& tft) {
           ty >= y && ty <= y+32) {
         ble_disconnect();
         return g_returnTo;
+      }
+
+    } else if (g_activeMenu == 2) {
+      // OTA button: y = CONTENT_Y2+12+20+32+16+14+14+24 = CONTENT_Y2+132
+      int btnY = CONTENT_Y2 + 132;
+      if (tx >= PANEL_X+10 && tx <= PANEL_X+160 &&
+          ty >= btnY && ty <= btnY+36) {
+        return AppState::OTA;
       }
     }
   }

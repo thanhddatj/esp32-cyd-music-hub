@@ -25,9 +25,10 @@
 #include "ui_scan.h"
 #include "ui_player.h"
 #include "ui_settings.h"
+#include "ui_ota.h"
 
 // ── Hardware ────────────────────────────────────────────────
-static constexpr int BACKLIGHT_PIN = 27;
+static constexpr int BACKLIGHT_PIN = 21;
 
 // ── Shared display ──────────────────────────────────────────
 TFT_eSPI tft;
@@ -41,10 +42,11 @@ void transitionTo(AppState next);
 // ── State-enter dispatchers ──────────────────────────────────
 void enterState(AppState s) {
   switch (s) {
-    case AppState::WELCOME:  ui_welcome_enter(tft);              break;
-    case AppState::SCAN:     ui_scan_enter(tft);                 break;
-    case AppState::PLAYER:   ui_player_enter(tft);               break;
+    case AppState::WELCOME:  ui_welcome_enter(tft);                 break;
+    case AppState::SCAN:     ui_scan_enter(tft);                    break;
+    case AppState::PLAYER:   ui_player_enter(tft);                  break;
     case AppState::SETTINGS: ui_settings_enter(tft, previousState); break;
+    case AppState::OTA:      ui_ota_enter(tft);                     break;
   }
 }
 
@@ -69,7 +71,13 @@ void updateState(AppState s) {
     }
     case AppState::SETTINGS: {
       AppState next = ui_settings_update(tft);
-      if (next != AppState::SETTINGS) transitionTo(next); // back to previousState
+      if (next == AppState::OTA) { previousState = AppState::SETTINGS; transitionTo(AppState::OTA); }
+      else if (next != AppState::SETTINGS) transitionTo(next);
+      break;
+    }
+    case AppState::OTA: {
+      AppState next = ui_ota_update(tft);
+      if (next != AppState::OTA) transitionTo(next);
       break;
     }
   }

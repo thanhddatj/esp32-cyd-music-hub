@@ -9,4 +9,5 @@ enum class AppState : uint8_t {
   SCAN,
   PLAYER,
   SETTINGS,
+  OTA,       // OTA firmware update screen
 };
