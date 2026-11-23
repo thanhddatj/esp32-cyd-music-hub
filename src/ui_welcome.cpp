@@ -10,7 +10,7 @@
  * A touch also skips the wait.
  */
 
-static constexpr uint32_t WELCOME_MS = 2800;
+static constexpr uint32_t WELCOME_MS = 3600;
 static uint32_t g_enterTime = 0;
 
 // ── Accent bar animation state ───────────────────────────────
@@ -61,15 +61,15 @@ static void drawText(TFT_eSPI& tft) {
 
   // Main title
   tft.setTextColor(CLR_TEXT_PRI, CLR_BG);
-  tft.drawString("Music Hub", 240, 160, FONT_MED);
+  tft.drawString("ESP32 Music Hub", 240, 160, FONT_MED);
 
   // Sub-title
   tft.setTextColor(CLR_TEXT_SEC, CLR_BG);
-  tft.drawString("ESP32 KBox Controller", 240, 185, FONT_SMALL);
+  tft.drawString("CYD Music Controller", 240, 185, FONT_SMALL);
 
   // "Tap to skip" hint
   tft.setTextColor(CLR_TEXT_DIM, CLR_BG);
-  tft.drawString("Tap to skip", 240, 300, FONT_SMALL);
+  tft.drawString("Loading...", 240, 300, FONT_SMALL);
 }
 
 static void drawBarFrame(TFT_eSPI& tft) {
