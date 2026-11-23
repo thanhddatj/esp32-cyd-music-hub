@@ -1,6 +1,6 @@
 # Music Hub – ESP32-3248S035
 
-Firmware điều khiển nhạc qua BLE cho DSP KBox (service AB00).
+Firmware điều khiển nhạc qua BLE cho CYD 3.5 inch.
 
 ---
 
