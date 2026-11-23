@@ -10,6 +10,7 @@
  *   touch.h/cpp        – XPT2046 touch helper
  *   theme.h            – shared colours, fonts, layout consts
  *
+ * No Wi-Fi / FreeRTOS / weather code in this build.
  */
 
 #include <Arduino.h>
@@ -27,7 +28,7 @@
 #include "ui_ota.h"
 
 // ── Hardware ────────────────────────────────────────────────
-static constexpr int BACKLIGHT_PIN = 27;
+static constexpr int BACKLIGHT_PIN = 21;
 
 // ── Shared display ──────────────────────────────────────────
 TFT_eSPI tft;

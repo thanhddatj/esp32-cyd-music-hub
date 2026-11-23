@@ -154,12 +154,7 @@ static void refreshState(TFT_eSPI& tft) {
 
     case OtaState::UPLOADING:
       drawProgressBar(tft, pct);
-      drawStatus(tft, "Dang nhan file...", CLR_TEXT_SEC);
-      break;
-
-    case OtaState::FLASHING:
-      drawProgressBar(tft, pct);
-      drawStatus(tft, "Dang ghi flash...", CLR_ACCENT);
+      drawStatus(tft, pct < 80 ? "Dang nhan file..." : "Dang ghi flash...", CLR_ACCENT);
       break;
 
     case OtaState::SUCCESS:
