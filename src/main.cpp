@@ -42,8 +42,8 @@ void enterState(AppState s) {
     case AppState::WELCOME:  ui_welcome_enter(tft);                 break;
     case AppState::SCAN:     ui_scan_enter(tft);                    break;
     case AppState::PLAYER:   ui_player_enter(tft);                  break;
-    case AppState::SETTINGS: ui_settings_enter(tft); break;
-    case AppState::OTA:      ui_ota_enter(tft, previousState);                     break;
+    case AppState::SETTINGS: ui_settings_enter(tft, previousState); break;
+    case AppState::OTA:      ui_ota_enter(tft);                     break;
   }
 }
 
