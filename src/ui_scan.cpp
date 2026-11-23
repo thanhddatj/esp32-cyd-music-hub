@@ -26,6 +26,10 @@ static constexpr int SCAN_BTN_W = 140;
 static constexpr int SCAN_BTN_H = 36;
 static constexpr int SCAN_BTN_X = (SCREEN_W - SCAN_BTN_W) / 2;
 static constexpr int SCAN_BTN_Y = BOTBAR_Y + (BOTBAR_H - SCAN_BTN_H) / 2;
+static constexpr int SCAN_GEAR_W = 32;
+static constexpr int SCAN_GEAR_H = 20;
+static constexpr int SCAN_GEAR_X = SCREEN_W - SCAN_GEAR_W - 6;
+static constexpr int SCAN_GEAR_Y = (TOPBAR_H - SCAN_GEAR_H) / 2;
 
 // ── State ─────────────────────────────────────────────────────
 static bool g_scanRequested  = false;
@@ -42,6 +46,11 @@ static void drawTopBar(TFT_eSPI& tft) {
   tft.setTextDatum(ML_DATUM);
   tft.setTextColor(CLR_TEXT_PRI, CLR_SURFACE);
   tft.drawString("Bluetooth Scan", 12, TOPBAR_H / 2, FONT_SMALL);
+  // Gear
+  tft.fillRoundRect(SCAN_GEAR_X, SCAN_GEAR_Y, SCAN_GEAR_W, SCAN_GEAR_H, 4, CLR_BTN_BG);
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(CLR_TEXT_SEC, CLR_BTN_BG);
+  tft.drawString("*", SCAN_GEAR_X + SCAN_GEAR_W/2, SCAN_GEAR_Y + SCAN_GEAR_H/2, FONT_SMALL);
 }
 
 static void drawScanButton(TFT_eSPI& tft, bool scanning) {
