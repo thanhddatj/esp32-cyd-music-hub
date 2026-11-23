@@ -9,14 +9,11 @@
  *   ble_manager.h/cpp  – BLE central logic (KBox AB-service)
  *   touch.h/cpp        – XPT2046 touch helper
  *   theme.h            – shared colours, fonts, layout consts
- *
- * No Wi-Fi / FreeRTOS / weather code in this build.
  */
 
 #include <Arduino.h>
 #include <SPI.h>
 #include <TFT_eSPI.h>
-
 #include "theme.h"
 #include "touch.h"
 #include "ble_manager.h"
@@ -45,8 +42,8 @@ void enterState(AppState s) {
     case AppState::WELCOME:  ui_welcome_enter(tft);                 break;
     case AppState::SCAN:     ui_scan_enter(tft);                    break;
     case AppState::PLAYER:   ui_player_enter(tft);                  break;
-    case AppState::SETTINGS: ui_settings_enter(tft, previousState); break;
-    case AppState::OTA:      ui_ota_enter(tft);                     break;
+    case AppState::SETTINGS: ui_settings_enter(tft); break;
+    case AppState::OTA:      ui_ota_enter(tft, previousState);                     break;
   }
 }
 
