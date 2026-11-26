@@ -1,12 +1,12 @@
 {
-  "name": "Music Hub (ESP32 CYD)",
+  "name": "elecUI (ESP32 CYD)",
   "version": "1.0",
   "new_install_prompt_erase": true,
   "builds": [
     {
       "chipFamily": "ESP32",
       "parts": [
-        { "path": "music-hub-full.bin", "offset": 0 }
+        { "path": "firmware.bin", "offset": 0 }
       ]
     }
   ]
